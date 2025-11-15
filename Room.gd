@@ -7,12 +7,14 @@ var room_name: String
 var room_id: int
 var floor_num: int
 var people: Array[Person]
+var texture: Texture2D
 
 func _init(name_to: String, id: int, floor_to: int = 0, rooms: Array[Room] = []):
 	room_name = name_to
 	room_id = id
 	floor_num = floor_to
 	linked_rooms += rooms
+	texture = TextureSampler.new().getTexture()
 	
 func addRoom(room: Room):
 	linked_rooms.append(room)
@@ -28,3 +30,6 @@ func getFloor() -> int:
 	
 func getLinkedRooms() -> Array[Room]:
 	return linked_rooms
+	
+func getTexture() -> Texture2D:
+	return texture

@@ -4,8 +4,9 @@ var current_room: Room
 var room_map: Array[Room]
 var inventory: Array[Item]
 
-@onready var terminal: TextEdit = self.get_child(0)
-@onready var user_in: LineEdit = self.get_child(1)
+@onready var terminal: TextEdit = $Terminal
+@onready var user_in: LineEdit = $UserIn
+@onready var room_sprite: Sprite3D = $RoomSprite
 
 func _ready() -> void:
 	user_in.editable = false
@@ -22,11 +23,12 @@ func _ready() -> void:
 		for room_in in room.getLinkedRooms():
 			writeToTerminal("Links to: " + room_in.getName() + "[" + str(room_in.getID()) + "] - " + str(room_in.getFloor()))
 		writeToTerminal("")
-		
+	
+	updateRoom()
 	provideNav()
 	user_in.editable = true
 	
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if Input.is_action_just_released("ui_text_submit"):
 		user_in.editable = false
 		var user_command = user_in.text
@@ -35,11 +37,11 @@ func _process(delta: float) -> void:
 		user_in.editable = true
 		
 func handleNav(command: String) -> void:
-	
 	if command == "EXIT":
 		get_tree().quit()
 	elif int(command) - 1 in range(current_room.getLinkedRooms().size()):
-		current_room = current_room.getLinkedRooms()[int(command) - 1]	
+		current_room = current_room.getLinkedRooms()[int(command) - 1]
+		updateRoom()
 	else:
 		writeToTerminal("Invalid input.")
 		writeToTerminal("")
@@ -61,3 +63,6 @@ func provideNav() -> void:
 func writeToTerminal(text: String) -> void:
 	terminal.insert_text_at_caret(text + "\n")
 	terminal.scroll_vertical = float(terminal.get_line_count())
+	
+func updateRoom() -> void:
+	room_sprite.texture = current_room.getTexture()
