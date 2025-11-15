@@ -6,6 +6,7 @@ var linked_rooms: Array[Room]
 var room_name: String
 var room_id: int
 var floor_num: int
+var people: Array[Person]
 
 func _init(name_to: String, id: int, floor_to: int = 0, rooms: Array[Room] = []):
 	room_name = name_to

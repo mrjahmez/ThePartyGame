@@ -4,3 +4,17 @@
 
 [node name="Node3D" type="Node3D"]
 script = ExtResource("1_3mqji")
+
+[node name="Terminal" type="TextEdit" parent="."]
+offset_right = 1152.0
+offset_bottom = 595.0
+text = "===TERMINAL===
+"
+editable = false
+selecting_enabled = false
+scroll_smooth = true
+
+[node name="UserIn" type="TextEdit" parent="."]
+offset_top = 600.0
+offset_right = 1151.0
+offset_bottom = 648.0
