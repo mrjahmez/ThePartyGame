@@ -14,6 +14,6 @@ func _init() -> void:
 				textures.append(load("res://Rooms/" + file))
 			file = dir.get_next()
 		dir.list_dir_end()
-				
+
 func getTexture():
 	return textures.pick_random()

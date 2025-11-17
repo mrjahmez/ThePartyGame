@@ -1,0 +1,92 @@
+# Blender 4.5.4 LTS MTL File: 'Untitled.blend'
+# www.blender.org
+
+newmtl Skirting
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd C:/Users/typic/OneDrive/Pictures/Textures/Skirting.jpg
+
+newmtl Skirting.001
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd C:/Users/typic/OneDrive/Pictures/Textures/Skirting.jpg
+
+newmtl Skirting.002
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd C:/Users/typic/OneDrive/Pictures/Textures/Skirting.jpg
+
+newmtl Skirting.003
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd C:/Users/typic/OneDrive/Pictures/Textures/Skirting.jpg
+
+newmtl Skirting.004
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd C:/Users/typic/OneDrive/Pictures/Textures/Skirting.jpg
+
+newmtl Wallpaper
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd -s 1 -4 -2 C:/Users/typic/OneDrive/Pictures/Textures/Wallpaper.jpg
+
+newmtl Wallpaper.001
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd -s 1 -4 -2 C:/Users/typic/OneDrive/Pictures/Textures/Wallpaper.jpg
+
+newmtl Wallpaper.002
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd -s 1 -4 -2 C:/Users/typic/OneDrive/Pictures/Textures/Wallpaper.jpg
+
+newmtl Wood
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd -s 1 1.4 1 C:/Users/typic/OneDrive/Pictures/Textures/WoodPlanks.jpg

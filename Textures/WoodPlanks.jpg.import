@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://brqgftamcy84o"
-path.s3tc="res://.godot/imported/KitchenPlaceholder.jpg-fb693ce6c1d54bdb4e92fa75139e3089.s3tc.ctex"
+uid="uid://c7ticsvwk2hpg"
+path.s3tc="res://.godot/imported/WoodPlanks.jpg-8736d77404606a97a39f9249bd76db1e.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://Rooms/KitchenPlaceholder.jpg"
-dest_files=["res://.godot/imported/KitchenPlaceholder.jpg-fb693ce6c1d54bdb4e92fa75139e3089.s3tc.ctex"]
+source_file="res://Textures/WoodPlanks.jpg"
+dest_files=["res://.godot/imported/WoodPlanks.jpg-8736d77404606a97a39f9249bd76db1e.s3tc.ctex"]
 
 [params]
 
