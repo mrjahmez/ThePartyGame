@@ -1,0 +1,122 @@
+[
+	{
+		"Bathroom": [
+			[1],
+			2,
+			[],
+			["Cabinet", "Toilet", "Bath"]
+		],
+		"Kitchen": [
+			[1, 2, 3],
+			1,
+			["Dining Room", "Corridor", "Living Room", "Backyard"],
+			["Fridge", "Sink", "Pantry", "Oven"]
+		],
+		"Corridor": [
+			[3, 4],
+			4,
+			["Bathroom", "Kitchen", "Dining Room", "Living Room", "Backyard", "Stairway", "Bedroom", "Study"],
+			["Cabinet"]
+		],
+		"Dining Room": [
+			[2, 3],
+			1,
+			["Kitchen", "Living Room", "Corridor", "Backyard"],
+			["Dining Table", "Cabinet"]
+		],
+		"Living Room": [
+			[2, 3],
+			2,
+			["Bathroom", "Kitchen", "Corridor", "Dining Room", "Backyard", "Stairway", "Study"],
+			["Bookshelf", "Coffee Table"]
+		],
+		"Backyard": [
+			[1, 2],
+			1,
+			["Shed"],
+			["Backyard Table", "Pool"]
+		],
+		"Shed": [
+			[1],
+			1,
+			[],
+			["Tool Cupboard"]
+		],
+		"Stairway": [
+			[2],
+			1,
+			["Corridor"],
+			[]
+		], 
+		"Bedroom": [
+			[1, 2],
+			3,
+			["Bathroom", "Study"],
+			["Bed", "Bedside Table", "Wardrobe"]
+		],
+		"Study": [
+			[1],
+			2,
+			[],
+			["Desk", "Bookshelf"]
+		]
+	},
+	{
+		"Bathroom": [
+			[1],
+			1,
+			[],
+			["Cabinet", "Toilet", "Bath"]
+		],
+		"Corridor": [
+			[3, 4],
+			3,
+			["Bathroom", "Living Room", "Stairway", "Bedroom", "Study"],
+			["Cabinet"]
+		],
+		"Living Room": [
+			[2, 3],
+			2,
+			["Bathroom", "Corridor", "Balcony", "Stairway", "Study"],
+			["Bookshelf", "Coffee Table"]
+		],
+		"Balcony": [
+			[1],
+			2,
+			[],
+			["Table"]
+		],
+		"Stairway": [
+			[2],
+			1,
+			["Attic"],
+			[]
+		],
+		"Bedroom": [
+			[1, 2],
+			2,
+			["Bathroom", "Study"],
+			["Bed", "Bedside Table", "Wardrobe"]
+		],
+		"Study": [
+			[1],
+			1,
+			[],
+			["Desk", "Bookshelf"]
+		]
+	},
+	{
+		"Attic": [
+			[1, 2],
+			1,
+			["Rooftop"],
+			["Storage Boxes"]
+		],
+		"Rooftop": [
+			[1],
+			1,
+			[],
+			[]
+		]
+	}
+]

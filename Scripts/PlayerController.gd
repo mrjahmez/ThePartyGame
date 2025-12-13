@@ -3,6 +3,8 @@ extends Node
 var current_room: Room
 var room_map: Array[Room]
 var inventory: Array[Item]
+var people: Array[Person]
+var tick = 0
 
 @onready var terminal: TextEdit = $Terminal
 @onready var user_in: LineEdit = $UserIn
@@ -14,7 +16,16 @@ func _ready() -> void:
 	
 	while room_map.size() < 12:
 		room_map = HouseGenerator.new().generateHouse()
+		
+	writeToTerminal("Populating...")
 	
+	for room in room_map:
+		for i in range(50 / room_map.size()):
+			var new_name = "Person " + str(people.size())
+			var new_person = Person.new(room, new_name)
+			room.addPerson(new_person)
+			people.append(new_person)
+			
 	current_room = room_map[0]
 	
 	for room in room_map:
@@ -28,19 +39,30 @@ func _ready() -> void:
 	provideNav()
 	user_in.editable = true
 	
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if Input.is_action_just_released("ui_text_submit"):
 		user_in.editable = false
 		var user_command = user_in.text
-		handleNav(user_command)
+		handleCommand(user_command)
 		user_in.text = ""
 		user_in.editable = true
 		
-func handleNav(command: String) -> void:
+	if tick >= 30.0:
+		updatePeople()
+		tick = 0
+	
+	tick += delta
+		
+func handleCommand(command: String) -> void:
 	if command == "EXIT":
 		get_tree().quit()
+	elif command == "PPL":
+		listPeople()
+	elif command == "OBJ":
+		listObjects()
 	elif int(command) - 1 in range(current_room.getLinkedRooms().size()):
 		current_room = current_room.getLinkedRooms()[int(command) - 1]
+		
 		updateRoom()
 	else:
 		writeToTerminal("Invalid input.")
@@ -66,3 +88,33 @@ func writeToTerminal(text: String) -> void:
 	
 func updateRoom() -> void:
 	room_sprite.texture = current_room.getTexture()
+	
+func updatePeople() -> void:
+	for person in people:
+		person.updatePerson()
+	
+func listPeople() -> void:
+	if current_room.getPeople().size() <= 0:
+		writeToTerminal("No people in current room.")
+		writeToTerminal("")
+		return
+		
+	writeToTerminal("People in current room:")
+	writeToTerminal("")
+	for person in current_room.getPeople():
+		writeToTerminal(person.getName())
+		
+	writeToTerminal("")
+	
+func listObjects() -> void:
+	if current_room.getInteractables().size() <= 0:
+		writeToTerminal("No objects in current room.")
+		writeToTerminal("")
+		return
+		
+	writeToTerminal("Objects in current room:")
+	writeToTerminal("")
+	for interactable in current_room.getInteractables():
+		writeToTerminal(interactable.getName())
+		
+	writeToTerminal("")
