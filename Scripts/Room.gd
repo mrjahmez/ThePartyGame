@@ -6,7 +6,7 @@ var linked_rooms: Array[Room]
 var room_name: String
 var room_id: int
 var floor_num: int
-var people: Array[Person]
+var characters: Array[Character]
 var interactables: Array[Interactable]
 var texture: Texture2D
 var model: MeshInstance3D
@@ -21,16 +21,16 @@ func _init(name_to: String, id: int, floor_to: int = 0, rooms: Array[Room] = [])
 func addRoom(room: Room):
 	linked_rooms.append(room)
 	
-func addPerson(person: Person):
-	people.append(person)
+func addCharacter(character: Character):
+	characters.append(character)
 	
 func addInteractable(obj: Interactable):
 	interactables.append(obj)
 	
-func removePerson(person_name: String):
-	for person in people:
-		if person.getName() == person_name:
-			people.erase(person)
+func removeCharacter(character_name: String):
+	for character in characters:
+		if character.getName() == character_name:
+			characters.erase(character)
 			break
 	
 func getName() -> String:
@@ -48,8 +48,8 @@ func getLinkedRooms() -> Array[Room]:
 func getTexture() -> Texture2D:
 	return texture
 	
-func getPeople() -> Array[Person]:
-	return people
+func getCharacters() -> Array[Character]:
+	return characters
 	
 func getInteractables() -> Array[Interactable]:
 	return interactables

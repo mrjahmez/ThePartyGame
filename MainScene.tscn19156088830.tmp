@@ -38,7 +38,6 @@ omni_range = 35.0
 
 [node name="RoomSprite" type="Sprite3D" parent="."]
 transform = Transform3D(0.141421, 0, 0.141421, 0, 0.2, 0, -0.141421, 0, 0.141421, -7, 2.5, -7)
-visible = false
 texture = ExtResource("2_x4av3")
 
 [node name="RoomPlaceholder" parent="." instance=ExtResource("3_rpqi1")]

@@ -3,12 +3,13 @@ extends Node
 var current_room: Room
 var room_map: Array[Room]
 var inventory: Array[Item]
-var people: Array[Person]
+var characters: Array[Character]
 var tick = 0
 
 @onready var terminal: TextEdit = $Terminal
 @onready var user_in: LineEdit = $UserIn
 @onready var room_sprite: Sprite3D = $RoomSprite
+@onready var room_model: MeshInstance3D = $RoomPlaceholder
 
 func _ready() -> void:
 	user_in.editable = false
@@ -21,10 +22,12 @@ func _ready() -> void:
 	
 	for room in room_map:
 		for i in range(50 / room_map.size()):
-			var new_name = "Person " + str(people.size())
-			var new_person = Person.new(room, new_name)
-			room.addPerson(new_person)
-			people.append(new_person)
+			var new_name = "Person " + str(characters.size())
+			var new_character = Character.new(room, new_name)
+			room.addCharacter(new_character)
+			characters.append(new_character)
+			add_child(new_character)
+			new_character.visible = false
 			
 	current_room = room_map[0]
 	
@@ -35,6 +38,7 @@ func _ready() -> void:
 			writeToTerminal("Links to: " + room_in.getName() + "[" + str(room_in.getID()) + "] - " + str(room_in.getFloor()))
 		writeToTerminal("")
 	
+	updatePeople()
 	updateRoom()
 	provideNav()
 	user_in.editable = true
@@ -47,7 +51,7 @@ func _process(delta: float) -> void:
 		user_in.text = ""
 		user_in.editable = true
 		
-	if tick >= 30.0:
+	if tick >= 10.0:
 		updatePeople()
 		tick = 0
 	
@@ -63,6 +67,7 @@ func handleCommand(command: String) -> void:
 	elif int(command) - 1 in range(current_room.getLinkedRooms().size()):
 		current_room = current_room.getLinkedRooms()[int(command) - 1]
 		
+		updatePeople()
 		updateRoom()
 	else:
 		writeToTerminal("Invalid input.")
@@ -90,19 +95,26 @@ func updateRoom() -> void:
 	room_sprite.texture = current_room.getTexture()
 	
 func updatePeople() -> void:
-	for person in people:
-		person.updatePerson()
+	for character in characters:
+		character.updateCharacter()
+		if character.getCurrentRoom() == current_room:
+			character.visible = true
+		else:
+			character.visible = false
+			var rand_x = randi_range(-18, 0)
+			var rand_z = randi_range(-18, 0)
+			character.positionSprite(rand_x, 2.5, rand_z)
 	
 func listPeople() -> void:
-	if current_room.getPeople().size() <= 0:
+	if current_room.getCharacters().size() <= 0:
 		writeToTerminal("No people in current room.")
 		writeToTerminal("")
 		return
 		
 	writeToTerminal("People in current room:")
 	writeToTerminal("")
-	for person in current_room.getPeople():
-		writeToTerminal(person.getName())
+	for character in current_room.getCharacters():
+		writeToTerminal(character.getName())
 		
 	writeToTerminal("")
 	
