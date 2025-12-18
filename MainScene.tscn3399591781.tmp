@@ -1,0 +1,45 @@
+[gd_scene load_steps=6 format=3 uid="uid://lhy0mffgmd5h"]
+
+[ext_resource type="Script" uid="uid://wucv0s4c3lkl" path="res://Scripts/GameHandler.gd" id="1_3mqji"]
+[ext_resource type="Texture2D" uid="uid://brqgftamcy84o" path="res://Rooms/KitchenPlaceholder.jpg" id="2_x4av3"]
+[ext_resource type="PackedScene" uid="uid://qv58hcag8qi1" path="res://Models/RoomPlaceholderModel.tscn" id="3_rpqi1"]
+
+[sub_resource type="Sky" id="Sky_3mqji"]
+
+[sub_resource type="Environment" id="Environment_x4av3"]
+background_mode = 1
+sky = SubResource("Sky_3mqji")
+ambient_light_source = 3
+
+[node name="GameHandler" type="Node3D"]
+script = ExtResource("1_3mqji")
+
+[node name="Terminal" type="TextEdit" parent="."]
+offset_right = 328.0
+offset_bottom = 297.0
+editable = false
+selecting_enabled = false
+
+[node name="UserIn" type="LineEdit" parent="."]
+offset_left = -1.0
+offset_top = 300.0
+offset_right = 328.0
+offset_bottom = 352.0
+placeholder_text = "Input..."
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0, 3, 0)
+environment = SubResource("Environment_x4av3")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Camera3D"]
+light_color = Color(0.931833, 0.86272, 0.772939, 1)
+light_energy = 2.0
+omni_range = 35.0
+
+[node name="RoomSprite" type="Sprite3D" parent="."]
+transform = Transform3D(0.141421, 0, 0.141421, 0, 0.2, 0, -0.141421, 0, 0.141421, -7, 2.5, -7)
+visible = false
+texture = ExtResource("2_x4av3")
+
+[node name="RoomPlaceholder" parent="." instance=ExtResource("3_rpqi1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, -14)

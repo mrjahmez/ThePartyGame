@@ -5,13 +5,24 @@ var room_map: Array[Room]
 var inventory: Array[Item]
 var characters: Array[Character]
 var tick = 0
+var cam_def_pos = Vector3(0, 3, 0)
+var cam_def_rot = Vector3(0, 0.1, 0)
+var cam_def: Transform3D
+var current_tween: Tween
+
+@export var focus_time = 0.6
+@export var focus_offset = 1
+@export var character_positioning = 8
 
 @onready var terminal: TextEdit = $Terminal
 @onready var user_in: LineEdit = $UserIn
 @onready var room_sprite: Sprite3D = $RoomSprite
 @onready var room_model: MeshInstance3D = $RoomPlaceholder
+@onready var camera: Camera3D = $Camera3D
 
 func _ready() -> void:
+	cam_def = camera.transform
+	resetCamera()
 	user_in.editable = false
 	writeToTerminal("Generating house...")
 	
@@ -23,23 +34,33 @@ func _ready() -> void:
 	for room in room_map:
 		for i in range(50 / room_map.size()):
 			var new_name = "Person " + str(characters.size())
-			var new_character = Character.new(room, new_name)
+			var new_character = Character.new(room, new_name, self)
 			room.addCharacter(new_character)
 			characters.append(new_character)
 			add_child(new_character)
-			new_character.visible = false
+			new_character.billboard = 1
+			if room.getID() == 0:
+				new_character.visible = true
+			else:
+				new_character.visible = false
 			
 	current_room = room_map[0]
 	
 	for room in room_map:
 		writeToTerminal(room.getName() + "[" + str(room.getID()) + "] - " + str(room.getFloor()))
+		writeToTerminal("Contains:")
+		
+		for character in room.getCharacters():
+			writeToTerminal(" - " + character.getName())
+			
+		writeToTerminal("Links to:")
 		
 		for room_in in room.getLinkedRooms():
-			writeToTerminal("Links to: " + room_in.getName() + "[" + str(room_in.getID()) + "] - " + str(room_in.getFloor()))
+			writeToTerminal(" - " + room_in.getName() + "[" + str(room_in.getID()) + "] - " + str(room_in.getFloor()))
 		writeToTerminal("")
-	
-	updatePeople()
+
 	updateRoom()
+	updatePeople()
 	provideNav()
 	user_in.editable = true
 	
@@ -50,6 +71,8 @@ func _process(delta: float) -> void:
 		handleCommand(user_command)
 		user_in.text = ""
 		user_in.editable = true
+	elif Input.is_action_pressed("ui_cancel"):
+		resetCamera()
 		
 	if tick >= 10.0:
 		updatePeople()
@@ -67,8 +90,8 @@ func handleCommand(command: String) -> void:
 	elif int(command) - 1 in range(current_room.getLinkedRooms().size()):
 		current_room = current_room.getLinkedRooms()[int(command) - 1]
 		
-		updatePeople()
 		updateRoom()
+		updatePeople()
 	else:
 		writeToTerminal("Invalid input.")
 		writeToTerminal("")
@@ -93,6 +116,7 @@ func writeToTerminal(text: String) -> void:
 	
 func updateRoom() -> void:
 	room_sprite.texture = current_room.getTexture()
+	resetCamera()
 	
 func updatePeople() -> void:
 	for character in characters:
@@ -101,9 +125,9 @@ func updatePeople() -> void:
 			character.visible = true
 		else:
 			character.visible = false
-			var rand_x = randi_range(-18, 0)
-			var rand_z = randi_range(-18, 0)
-			character.positionSprite(rand_x, 2.5, rand_z)
+			var rand_x = randi_range(0, character_positioning)
+			var rand_z = randi_range(0, character_positioning)
+			character.positionSprite(rand_x * (-18 / character_positioning), 2.5, rand_z * (-18 / character_positioning))
 	
 func listPeople() -> void:
 	if current_room.getCharacters().size() <= 0:
@@ -130,3 +154,37 @@ func listObjects() -> void:
 		writeToTerminal(interactable.getName())
 		
 	writeToTerminal("")
+	
+func resetCamera() -> void:
+	camera.transform = cam_def
+	
+func focusOn(target: Node3D) -> void:
+	if target == null:
+		return
+		
+	if current_tween:
+		current_tween.kill()
+		
+	var target_pos = target.global_position + getTargetPos(target)
+	var target_basis = camera.global_transform.looking_at(target.global_position, Vector3.UP).basis
+	
+	current_tween = create_tween()
+	current_tween.set_parallel()
+	
+	current_tween.tween_property(camera, "global_position", target_pos, focus_time).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	current_tween.tween_method(Callable(self, "tweenRotation"), camera.global_basis, target_basis, focus_time)
+	
+func tweenRotation(basis: Basis):
+	camera.global_basis = basis
+	
+func getTargetPos(target: Node3D) -> Vector3:
+	var x = camera.global_position.x - target.global_position.x
+	var z = camera.global_position.z - target.global_position.z
+	var angle = atan(z / x)
+	x = focus_offset * cos(angle)
+	z = focus_offset * sin(angle)
+	
+	var target_offset = Vector3(x, focus_offset, z)
+	
+	return target_offset
+	
