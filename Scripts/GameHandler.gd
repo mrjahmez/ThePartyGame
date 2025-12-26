@@ -4,32 +4,23 @@ var current_room: Room
 var room_map: Array[Room]
 var inventory: Array[Item]
 var characters: Array[Character]
-var known_characters: Array[Character]
 var tick = 0
+var cam_def_pos = Vector3(0, 3, 0)
+var cam_def_rot = Vector3(0, 0.1, 0)
 var cam_def: Transform3D
 var current_tween: Tween
-var is_focused = false
-var focus_target: Character
 
-@export var focus_time = 0.5
-@export var focus_offset = 1.5
+@export var focus_time = 0.6
+@export var focus_offset = 1
 @export var character_positioning = 8
-@export var tick_rate = 20.0
 
 @onready var terminal: TextEdit = $Terminal
 @onready var user_in: LineEdit = $UserIn
+@onready var room_sprite: Sprite3D = $RoomSprite
 @onready var room_model: MeshInstance3D = $RoomPlaceholder
 @onready var camera: Camera3D = $Camera3D
-@onready var char_text: TextEdit = $CharacterText
-@onready var query_opt: ItemList = $QueryList
-@onready var char_list: ItemList = $CharacterList
 
 func _ready() -> void:
-	char_text.visible = false
-	query_opt.visible = false
-	char_list.visible = false
-	terminal.visible = false
-	user_in.visible = false
 	cam_def = camera.transform
 	resetCamera()
 	user_in.editable = false
@@ -50,12 +41,8 @@ func _ready() -> void:
 			new_character.billboard = 1
 			if room.getID() == 0:
 				new_character.visible = true
-				var rand_x = randi_range(0, character_positioning)
-				var rand_z = randi_range(0, character_positioning)
-				new_character.positionSprite(rand_x * (-18 / character_positioning), 2.5, rand_z * (-18 / character_positioning))
 			else:
 				new_character.visible = false
-
 			
 	current_room = room_map[0]
 	
@@ -79,36 +66,15 @@ func _ready() -> void:
 	
 func _process(delta: float) -> void:
 	if Input.is_action_just_released("ui_text_submit"):
-		
 		user_in.editable = false
 		var user_command = user_in.text
 		handleCommand(user_command)
 		user_in.text = ""
 		user_in.editable = true
 	elif Input.is_action_pressed("ui_cancel"):
-		
 		resetCamera()
-	elif Input.is_action_just_released("ui_toggle"):
 		
-		terminal.visible = not terminal.visible
-		user_in.visible = not user_in.visible
-		
-	if query_opt.is_selected(0):
-		query_opt.deselect_all()
-		char_list.clear()
-		for character in getKnownCharacters():
-			if character.getName() == focus_target.getName():
-				continue
-			char_list.add_item(character.getName())
-		char_list.visible = true
-	elif char_list.is_anything_selected():
-		var selected = char_list.get_selected_items()
-		char_list.deselect_all()
-		var fin_opt = char_list.get_item_text(selected[0])
-		focus_target.queryCharacter(fin_opt)
-		
-	if tick >= tick_rate:
-		
+	if tick >= 10.0:
 		updatePeople()
 		tick = 0
 	
@@ -149,8 +115,7 @@ func writeToTerminal(text: String) -> void:
 	terminal.scroll_vertical = float(terminal.get_line_count())
 	
 func updateRoom() -> void:
-	#for room in room_map:
-	#	room.updateDoors(room == current_room)
+	room_sprite.texture = current_room.getTexture()
 	resetCamera()
 	
 func updatePeople() -> void:
@@ -191,32 +156,12 @@ func listObjects() -> void:
 	writeToTerminal("")
 	
 func resetCamera() -> void:
-	if current_tween:
-		current_tween.kill()
-		
-	current_tween = create_tween()
-	
-	current_tween.tween_property(camera, "transform", cam_def, focus_time).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	
-	is_focused = false
-	focus_target = null
-	
-func isFocused() -> bool:
-	return is_focused
+	camera.transform = cam_def
 	
 func focusOn(target: Node3D) -> void:
-	if is_focused:
-		return
-	
 	if target == null:
 		return
 		
-	is_focused = true
-	focus_target = target
-	
-	if not (target in known_characters):
-		known_characters.append(target)
-	
 	if current_tween:
 		current_tween.kill()
 		
@@ -239,10 +184,7 @@ func getTargetPos(target: Node3D) -> Vector3:
 	x = focus_offset * cos(angle)
 	z = focus_offset * sin(angle)
 	
-	var target_offset = Vector3(x, 1, z)
+	var target_offset = Vector3(x, focus_offset, z)
 	
 	return target_offset
-	
-func getKnownCharacters() -> Array[Character]:
-	return known_characters
 	
