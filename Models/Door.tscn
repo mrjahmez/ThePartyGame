@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://c2uif5ccmlv1"]
+
+[ext_resource type="BoxMesh" uid="uid://4ul45yfk862k" path="res://Models/Door.tres" id="1_w8i8i"]
+
+[node name="Door" type="MeshInstance3D"]
+transform = Transform3D(0.5, 0, 0, 0, 4.5, 0, 0, 0, 2.5, 0, 0, 0)
+mesh = ExtResource("1_w8i8i")
+skeleton = NodePath("../RoomPlaceholder")
