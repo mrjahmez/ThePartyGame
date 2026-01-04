@@ -1,14 +1,23 @@
-[gd_scene load_steps=5 format=3 uid="uid://lhy0mffgmd5h"]
+[gd_scene load_steps=6 format=3 uid="uid://lhy0mffgmd5h"]
 
 [ext_resource type="Script" uid="uid://wucv0s4c3lkl" path="res://Scripts/GameHandler.gd" id="1_3mqji"]
 [ext_resource type="PackedScene" uid="uid://qv58hcag8qi1" path="res://Models/RoomPlaceholderModel.tscn" id="3_rpqi1"]
+[ext_resource type="PackedScene" uid="uid://x7bp3e1srb1l" path="res://Models/Veranda/veranda_export.glb" id="3_uxrcv"]
 
 [sub_resource type="Sky" id="Sky_3mqji"]
 
 [sub_resource type="Environment" id="Environment_x4av3"]
 background_mode = 1
 sky = SubResource("Sky_3mqji")
-ambient_light_source = 3
+ambient_light_source = 2
+ambient_light_color = Color(0.843137, 0.764706, 0.682353, 1)
+ambient_light_energy = 0.1
+ssao_enabled = true
+glow_enabled = true
+glow_bloom = 0.2
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.01
+volumetric_fog_albedo = Color(0.560955, 0.560955, 0.560955, 1)
 
 [node name="GameHandler" type="Node3D"]
 script = ExtResource("1_3mqji")
@@ -75,9 +84,38 @@ transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 
 environment = SubResource("Environment_x4av3")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="Camera3D"]
+visible = false
 light_color = Color(0.931833, 0.86272, 0.772939, 1)
 light_energy = 2.0
 omni_range = 35.0
 
 [node name="RoomPlaceholder" parent="." instance=ExtResource("3_rpqi1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, -14)
+visible = false
+
+[node name="Veranda" parent="." instance=ExtResource("3_uxrcv")]
+transform = Transform3D(0.996917, 0, 0.0784591, 0, 1, 0, -0.0784591, 0, 0.996917, -3.54, 1.25, -0.885)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="Veranda"]
+transform = Transform3D(1, -7.45058e-09, -4.44089e-16, 0, -4.37114e-08, 1, -7.45058e-09, -1, -4.37114e-08, 1.97945, 2.72928, 0.359935)
+light_color = Color(0.843137, 0.764706, 0.682353, 1)
+light_energy = 15.222
+light_volumetric_fog_energy = 16.0
+shadow_enabled = true
+spot_angle = 85.0
+spot_angle_attenuation = 10.1965
+
+[node name="SpotLight3D2" type="SpotLight3D" parent="Veranda"]
+transform = Transform3D(1, -7.45058e-09, -4.44089e-16, 0, -4.37114e-08, 1, -7.45058e-09, -1, -4.37114e-08, -3.09527, 2.79226, 0.38414)
+light_color = Color(0.843137, 0.764706, 0.682353, 1)
+light_energy = 15.222
+light_volumetric_fog_energy = 16.0
+shadow_enabled = true
+spot_angle = 85.0
+spot_angle_attenuation = 10.1965
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Veranda"]
+transform = Transform3D(1, 0, 7.45058e-09, 0, 1, 0, -7.45058e-09, 0, 1, -2.34028, 2.47473, -0.946139)
+light_color = Color(0.843137, 0.764706, 0.682353, 1)
+light_energy = 0.5
+omni_attenuation = 0.5

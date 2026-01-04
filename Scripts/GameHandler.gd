@@ -149,8 +149,6 @@ func writeToTerminal(text: String) -> void:
 	terminal.scroll_vertical = float(terminal.get_line_count())
 	
 func updateRoom() -> void:
-	#for room in room_map:
-	#	room.updateDoors(room == current_room)
 	resetCamera()
 	
 func updatePeople() -> void:

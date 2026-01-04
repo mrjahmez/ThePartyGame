@@ -97,10 +97,6 @@ func onAreaInput(_camera: Camera3D, event: InputEvent, _position: Vector3, _norm
 		char_text.visible = true
 		query_opt.visible = true
 		char_text.text = getName() + ": Hello there!"
-		#for character in last_seen.keys():
-		#	if last_seen.get(character) == current_room:
-		#		continue
-		#	char_text.text += "\n" + character.getName() + " was in " + last_seen.get(character).getName()
 			
 func queryCharacter(query: String) -> void:
 	for character in getLastSeen().keys():

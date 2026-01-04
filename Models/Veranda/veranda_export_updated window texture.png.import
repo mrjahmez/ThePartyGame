@@ -1,0 +1,38 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://cpx2prtmvi6u0"
+path.s3tc="res://.godot/imported/veranda_export_updated window texture.png-6a29c705144d6c90440706515f403b5e.s3tc.ctex"
+metadata={
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
+}
+generator_parameters={
+"md5": "951ed7ae0936fa19ca68d8d16b087b1e"
+}
+
+[deps]
+
+source_file="res://Models/Veranda/veranda_export_updated window texture.png"
+dest_files=["res://.godot/imported/veranda_export_updated window texture.png-6a29c705144d6c90440706515f403b5e.s3tc.ctex"]
+
+[params]
+
+compress/mode=2
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/hdr_compression=1
+compress/normal_map=0
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+roughness/mode=0
+roughness/src_normal=""
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
+process/hdr_as_srgb=false
+process/hdr_clamp_exposure=false
+process/size_limit=0
+detect_3d/compress_to=0
