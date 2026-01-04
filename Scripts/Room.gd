@@ -8,18 +8,22 @@ var room_id: int
 var floor_num: int
 var characters: Array[Character]
 var interactables: Array[Interactable]
-var model: MeshInstance3D
+var model
+var collider
+var game_handler
 
-#var doors: Array[MeshInstance3D]
-#var handler
-
-func _init(name_to: String, id: int, floor_to: int = 0, rooms: Array[Room] = [], game_handler = null):
+func _init(name_to: String, id: int, floor_to: int = 0, rooms: Array[Room] = [], game_model = null, handler = null):
 	room_name = name_to
 	room_id = id
 	floor_num = floor_to
 	linked_rooms += rooms
-	#handler = get_node_or_null("/root/GameHandler") # fix this to instantiate rooms
-	#print(handler)
+	model = game_model
+	game_handler = handler
+	model.visible = false
+	collider = model.find_child("CollisionArea")
+	if collider:
+		collider.input_ray_pickable = true
+		collider.input_event.connect(onAreaInput)
 
 func _ready() -> void:
 	pass
@@ -39,22 +43,12 @@ func removeCharacter(character_name: String):
 			characters.erase(character)
 			break
 
-#func updateDoors(is_room: bool = false) -> void:
-#	if doors.size() == 0 or doors == null:
-#		for i in range(linked_rooms.size()):
-#			var new_door = MeshInstance3D.new()
-#			#handler.add_child(new_door)
-#			new_door.mesh = load("res://Models/Door.tres")
-#			
-#			new_door.global_position = Vector3(-19.0, 2.25, (18 / linked_rooms.size()) * -i)
-#			doors.append(new_door)
-#			
-#	if is_room:
-#		for door in doors:
-#			door.visible = true
-#	else:
-#		for door in doors:
-#			door.visible = false
+func updateModel() -> void:
+	model.visible = !model.visible
+	
+func onAreaInput(_camera: Camera3D, event: InputEvent, _position: Vector3, _normal: Vector3, _shape_idx: int) -> void:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_released():
+		game_handler.moveRoom(collider, linked_rooms[0])
 	
 func getName() -> String:
 	return room_name

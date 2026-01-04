@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://lhy0mffgmd5h"]
+[gd_scene load_steps=6 format=3 uid="uid://lhy0mffgmd5h"]
 
 [ext_resource type="Script" uid="uid://wucv0s4c3lkl" path="res://Scripts/GameHandler.gd" id="1_3mqji"]
 [ext_resource type="PackedScene" uid="uid://qv58hcag8qi1" path="res://Models/RoomPlaceholderModel.tscn" id="3_rpqi1"]
@@ -18,9 +18,6 @@ glow_bloom = 0.2
 volumetric_fog_enabled = true
 volumetric_fog_density = 0.01
 volumetric_fog_albedo = Color(0.533037, 0.533037, 0.533037, 1)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_rpqi1"]
-size = Vector3(0.965088, 2.25564, 1.14404)
 
 [node name="GameHandler" type="Node3D"]
 script = ExtResource("1_3mqji")
@@ -92,10 +89,14 @@ light_color = Color(0.931833, 0.86272, 0.772939, 1)
 light_energy = 2.0
 omni_range = 35.0
 
+[node name="RoomPlaceholder" parent="." instance=ExtResource("3_rpqi1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, -14)
+visible = false
+
 [node name="Rooms" type="Node" parent="."]
 
 [node name="Veranda" parent="Rooms" instance=ExtResource("3_uxrcv")]
-transform = Transform3D(1.49909, 0, 0.0523492, 0, 1.5, 0, -0.0523492, 0, 1.49909, -5.7, 0.26, -1.7)
+transform = Transform3D(0.996917, 0, 0.0784591, 0, 1, 0, -0.0784591, 0, 0.996917, -3.54, 1.25, -0.885)
 
 [node name="SpotLight3D" type="SpotLight3D" parent="Rooms/Veranda"]
 transform = Transform3D(1, -7.45058e-09, -4.44089e-16, 0, -4.37114e-08, 1, -7.45058e-09, -1, -4.37114e-08, 1.97945, 2.72928, 0.359935)
@@ -120,15 +121,3 @@ transform = Transform3D(1, 0, 7.45058e-09, 0, 1, 0, -7.45058e-09, 0, 1, -2.34028
 light_color = Color(0.843137, 0.764706, 0.682353, 1)
 light_energy = 0.5
 omni_attenuation = 0.5
-
-[node name="CollisionArea" type="Area3D" parent="Rooms/Veranda"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.54422, 1.79688, -1.09758)
-
-[node name="CollisionShape" type="CollisionShape3D" parent="Rooms/Veranda/CollisionArea"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0715151, -0.343105, -0.376034)
-shape = SubResource("BoxShape3D_rpqi1")
-
-[node name="RoomPlaceholder" parent="Rooms" instance=ExtResource("3_rpqi1")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, -14)
-visible = false
-skeleton = NodePath("../..")

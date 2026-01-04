@@ -91,7 +91,7 @@ func getSpriteWorldSize() -> Vector3:
 	return Vector3(w * 0.3, h * 1, 0.05)
 	
 func onAreaInput(_camera: Camera3D, event: InputEvent, _position: Vector3, _normal: Vector3, _shape_idx: int) -> void:
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed and not game_handler.isFocused():
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_released() and not game_handler.isFocused():
 		game_handler.focusOn(self)
 		focus_lock = true
 		char_text.visible = true

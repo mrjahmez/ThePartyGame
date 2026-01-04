@@ -12,11 +12,18 @@ var room_config_file = FileAccess.open(room_config_path, FileAccess.READ)
 var room_config_text = room_config_file.get_as_text()
 var room_config_data = JSON.parse_string(room_config_text)
 
+var room_model_node
+var game_handler
+
+func _init(room_node, handler) -> void:
+	room_model_node = room_node
+	game_handler = handler
+
 func generateHouse() -> Array[Room]:
-	var prev_room = Room.new("Porch", room_id, 0)
+	var prev_room = Room.new("Veranda", room_id, 0, [], room_model_node.find_child("Veranda"), game_handler)
 	room_id += 1
 	room_map.append(prev_room)
-	var next_room = Room.new("Corridor", room_id, 0)
+	var next_room = Room.new("Corridor", room_id, 0, [], room_model_node.find_child("RoomPlaceholder"), game_handler)
 	room_id += 1
 	room_map.append(next_room)
 	prev_room.addRoom(next_room)
@@ -61,7 +68,7 @@ func generateRooms(room_to_gen: Room, origin_room: Room, floor_num: int) -> void
 		var room_objs = room_config_data[next_floor].get(next_room_name)[3]
 		room_config_data[next_floor][next_room_name] = [room_mapping, room_count, joinable_rooms, room_objs]
 
-		var next_room = Room.new(next_room_name, room_id, next_floor)
+		var next_room = Room.new(next_room_name, room_id, next_floor, [], room_model_node.find_child("RoomPlaceholder"), game_handler)
 		room_id += 1
 		room_map.append(next_room)
 		room_to_gen.addRoom(next_room)

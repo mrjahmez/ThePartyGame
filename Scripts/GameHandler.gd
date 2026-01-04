@@ -24,6 +24,8 @@ var focus_target: Character
 @onready var query_opt: ItemList = $QueryList
 @onready var char_list: ItemList = $CharacterList
 
+@onready var room_models_node = $Rooms
+
 func _ready() -> void:
 	char_text.visible = false
 	query_opt.visible = false
@@ -36,7 +38,7 @@ func _ready() -> void:
 	writeToTerminal("Generating house...")
 	
 	while room_map.size() < 12:
-		room_map = HouseGenerator.new().generateHouse()
+		room_map = HouseGenerator.new(room_models_node, self).generateHouse()
 		
 	writeToTerminal("Populating...")
 	
@@ -71,7 +73,8 @@ func _ready() -> void:
 		for room_in in room.getLinkedRooms():
 			writeToTerminal(" - " + room_in.getName() + "[" + str(room_in.getID()) + "] - " + str(room_in.getFloor()))
 		writeToTerminal("")
-
+	
+	current_room.updateModel()
 	updateRoom()
 	updatePeople()
 	provideNav()
@@ -122,7 +125,9 @@ func handleCommand(command: String) -> void:
 	elif command == "OBJ":
 		listObjects()
 	elif int(command) - 1 in range(current_room.getLinkedRooms().size()):
+		current_room.updateModel()
 		current_room = current_room.getLinkedRooms()[int(command) - 1]
+		current_room.updateModel()
 		
 		updateRoom()
 		updatePeople()
@@ -202,7 +207,7 @@ func resetCamera() -> void:
 func isFocused() -> bool:
 	return is_focused
 	
-func focusOn(target: Node3D) -> void:
+func focusOn(target: Node3D, scene_tran = false) -> void:
 	if is_focused:
 		return
 	
@@ -210,10 +215,12 @@ func focusOn(target: Node3D) -> void:
 		return
 		
 	is_focused = true
-	focus_target = target
 	
-	if not (target in known_characters):
-		known_characters.append(target)
+	if not scene_tran:
+		focus_target = target
+	
+		if not (target in known_characters):
+			known_characters.append(target)
 	
 	if current_tween:
 		current_tween.kill()
@@ -243,4 +250,35 @@ func getTargetPos(target: Node3D) -> Vector3:
 	
 func getKnownCharacters() -> Array[Character]:
 	return known_characters
+	
+func moveRoom(target: Node3D, next_room: Room) -> void:
+	if is_focused:
+		return
+	
+	if target == null:
+		return
+		
+	is_focused = true
+	
+	if current_tween:
+		current_tween.kill()
+		
+	var target_pos = target.global_position
+	var target_basis = camera.global_transform.looking_at(target.global_position, Vector3.UP).basis
+	
+	current_tween = create_tween()
+	current_tween.set_parallel()
+	
+	current_tween.tween_property(camera, "global_position", target_pos, focus_time).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	current_tween.tween_method(Callable(self, "tweenRotation"), camera.global_basis, target_basis, focus_time)
+	
+	await current_tween.finished
+	
+	current_room.updateModel()
+	current_room = next_room
+	current_room.updateModel()
+		
+	updateRoom()
+	updatePeople()
+	
 	
