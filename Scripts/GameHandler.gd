@@ -14,11 +14,11 @@ var focus_target: Character
 @export var focus_time = 0.5
 @export var focus_offset = 1.5
 @export var character_positioning = 8
-@export var tick_rate = 20.0
+@export var tick_rate = 60.0 #20.0
 
 @onready var terminal: TextEdit = $Terminal
 @onready var user_in: LineEdit = $UserIn
-@onready var room_model: MeshInstance3D = $RoomPlaceholder
+@onready var room_model: MeshInstance3D = $Rooms/RoomPlaceholder
 @onready var camera: Camera3D = $Camera3D
 @onready var char_text: TextEdit = $CharacterText
 @onready var query_opt: ItemList = $QueryList
@@ -52,9 +52,11 @@ func _ready() -> void:
 			new_character.billboard = 1
 			if room.getID() == 0:
 				new_character.visible = true
-				var rand_x = randi_range(0, character_positioning)
-				var rand_z = randi_range(0, character_positioning)
-				new_character.positionSprite(rand_x * (-18 / character_positioning), 2.5, rand_z * (-18 / character_positioning))
+				var spawns = room.getAvailableSpawns()
+				var spawn = spawns[randi_range(0, spawns.size() - 1)]
+				room.updateCharacter(spawn, new_character)
+				new_character.setSpawn(spawn)
+				new_character.positionSprite(spawn.global_position.x, 2.5, spawn.global_position.z)
 			else:
 				new_character.visible = false
 
@@ -159,13 +161,13 @@ func updateRoom() -> void:
 func updatePeople() -> void:
 	for character in characters:
 		character.updateCharacter()
+		var spawn = character.getSpawn()
+		if spawn:
+			character.positionSprite(spawn.global_position.x, 2.5, spawn.global_position.z)
 		if character.getCurrentRoom() == current_room:
 			character.visible = true
 		else:
 			character.visible = false
-			var rand_x = randi_range(0, character_positioning)
-			var rand_z = randi_range(0, character_positioning)
-			character.positionSprite(rand_x * (-18 / character_positioning), 2.5, rand_z * (-18 / character_positioning))
 	
 func listPeople() -> void:
 	if current_room.getCharacters().size() <= 0:
@@ -176,7 +178,7 @@ func listPeople() -> void:
 	writeToTerminal("People in current room:")
 	writeToTerminal("")
 	for character in current_room.getCharacters():
-		writeToTerminal(character.getName())
+		writeToTerminal(character.getName() + ": " + str(character.getSpawn()))
 		
 	writeToTerminal("")
 	
@@ -280,5 +282,6 @@ func moveRoom(target: Node3D, next_room: Room) -> void:
 		
 	updateRoom()
 	updatePeople()
+	provideNav()
 	
 	

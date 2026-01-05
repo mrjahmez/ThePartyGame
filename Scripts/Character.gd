@@ -10,6 +10,7 @@ var shape: BoxShape3D
 var game_handler: Node
 var focus_lock = false
 var last_seen: Dictionary
+var current_spawn: Node3D
 
 var char_text
 var query_opt
@@ -19,6 +20,7 @@ func _init(start_room: Room, new_name: String, handler: Node) -> void:
 	current_room = start_room
 	char_name = new_name
 	game_handler = handler
+	current_spawn = current_room.getAvailableSpawns()[randi_range(0, current_room.getAvailableSpawns().size() - 1)]
 
 func _ready() -> void:
 	texture = load("res://Textures/PersonSilhouette.png")
@@ -36,6 +38,12 @@ func _process(_delta: float) -> void:
 		char_text.text = ""
 		
 	
+func setSpawn(spawn: Node3D) -> void:
+	current_spawn = spawn
+	
+func getSpawn() -> Node3D:
+	return current_spawn
+	
 func getCurrentRoom() -> Room:
 	return current_room
 	
@@ -52,11 +60,18 @@ func updateCharacter() -> void:
 	if focus_lock:
 		return
 		
-	if randi() % 3 == 0:
+	if randi() % 2 == 0:
 		var new_room = current_room.getLinkedRooms().pick_random()
-		current_room.removeCharacter(getName())
-		current_room = new_room
-		new_room.addCharacter(self)
+		var spawns = new_room.getAvailableSpawns()
+		if spawns.size() > 0:
+			current_room.removeCharacter(self)
+			current_room.updateCharacter(current_spawn, self)
+			new_room.addCharacter(self)
+			var spawn_num = randi_range(0, spawns.size() - 1)
+			var new_spawn = spawns[spawn_num]
+			current_spawn = new_spawn
+			new_room.updateCharacter(current_spawn, self)
+			current_room = new_room
 		
 	for character in current_room.getCharacters():
 		if character == self:

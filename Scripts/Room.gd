@@ -11,6 +11,7 @@ var interactables: Array[Interactable]
 var model
 var collider
 var game_handler
+var spawn_points: Dictionary[Node3D, Character]
 
 func _init(name_to: String, id: int, floor_to: int = 0, rooms: Array[Room] = [], game_model = null, handler = null):
 	room_name = name_to
@@ -24,6 +25,9 @@ func _init(name_to: String, id: int, floor_to: int = 0, rooms: Array[Room] = [],
 	if collider:
 		collider.input_ray_pickable = true
 		collider.input_event.connect(onAreaInput)
+	for child in model.find_child("SpawnPoints").get_children():
+		if child:
+			spawn_points[child] = null
 
 func _ready() -> void:
 	pass
@@ -37,11 +41,8 @@ func addCharacter(character: Character):
 func addInteractable(obj: Interactable):
 	interactables.append(obj)
 	
-func removeCharacter(character_name: String):
-	for character in characters:
-		if character.getName() == character_name:
-			characters.erase(character)
-			break
+func removeCharacter(character: Character):
+	characters.erase(character)
 
 func updateModel() -> void:
 	model.visible = !model.visible
@@ -49,6 +50,12 @@ func updateModel() -> void:
 func onAreaInput(_camera: Camera3D, event: InputEvent, _position: Vector3, _normal: Vector3, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_released():
 		game_handler.moveRoom(collider, linked_rooms[0])
+	
+func updateCharacter(spawn: Node3D, character: Character) -> void:
+	if spawn_points.get(spawn) == null:
+		spawn_points[spawn] = character
+		return
+	spawn_points[spawn] = null
 	
 func getName() -> String:
 	return room_name
@@ -67,3 +74,13 @@ func getCharacters() -> Array[Character]:
 	
 func getInteractables() -> Array[Interactable]:
 	return interactables
+	
+func getAvailableSpawns() -> Array[Node3D]:
+	var available_spawns: Array[Node3D] = []
+	for spawn in spawn_points.keys():
+		if spawn == null:
+			continue
+		if spawn_points.get(spawn) == null:
+			available_spawns.append(spawn)
+	
+	return available_spawns
